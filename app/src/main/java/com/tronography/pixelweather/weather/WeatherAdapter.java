@@ -13,7 +13,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tronography.pixelweather.R;
 import com.tronography.pixelweather.model.ForecastModel;
 import com.tronography.pixelweather.utils.DateUtils;
-import com.tronography.pixelweather.utils.IconUrlUtils;
 
 import java.util.List;
 
@@ -23,10 +22,10 @@ import butterknife.ButterKnife;
 import static com.tronography.pixelweather.utils.IconUrlUtils.*;
 
 
-public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ForecastHolder> {
+class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ForecastHolder> {
     private List<ForecastModel> results;
 
-    public WeatherAdapter(List<ForecastModel> results) {
+    WeatherAdapter(List<ForecastModel> results) {
         this.results = results;
     }
 
@@ -57,7 +56,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.Forecast
         TextView tempMinTv;
         @Bind(R.id.icon_iv)
         ImageView iconImage;
-
 
         private Context context;
 
@@ -92,7 +90,5 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.Forecast
         private void setTempMax(ForecastModel result) {
             tempMaxTv.setText(String.valueOf((int) result.getTempMax()));
         }
-
-
     }
 }

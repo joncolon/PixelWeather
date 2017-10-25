@@ -18,32 +18,16 @@ public class ForecastModel {
         return tempMax;
     }
 
-    public void setTempMax(double tempMax) {
-        this.tempMax = tempMax;
-    }
-
     public double getTempMin() {
         return tempMin;
-    }
-
-    public void setTempMin(double tempMin) {
-        this.tempMin = tempMin;
     }
 
     public String getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
     public long getDateTime() {
         return dateTime;
-    }
-
-    public void setDateTime(long dateTime) {
-        this.dateTime = dateTime;
     }
 
     @Override

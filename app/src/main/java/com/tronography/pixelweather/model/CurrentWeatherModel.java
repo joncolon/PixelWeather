@@ -42,112 +42,56 @@ public class CurrentWeatherModel {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getCountry() {
         return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getIcon() {
         return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public int getClouds() {
         return clouds;
     }
 
-    public void setClouds(int clouds) {
-        this.clouds = clouds;
-    }
-
     public int getHumidity() {
         return humidity;
-    }
-
-    public void setHumidity(int humidity) {
-        this.humidity = humidity;
     }
 
     public double getPressure() {
         return pressure;
     }
 
-    public void setPressure(double pressure) {
-        this.pressure = pressure;
-    }
-
     public double getCurrentTemp() {
         return currentTemp;
-    }
-
-    public void setCurrentTemp(double currentTemp) {
-        this.currentTemp = currentTemp;
     }
 
     public double getTempMax() {
         return tempMax;
     }
 
-    public void setTempMax(double tempMax) {
-        this.tempMax = tempMax;
-    }
-
     public double getTempMin() {
         return tempMin;
-    }
-
-    public void setTempMin(double tempMin) {
-        this.tempMin = tempMin;
     }
 
     public double getWindSpeed() {
         return windSpeed;
     }
 
-    public void setWindSpeed(double windSpeed) {
-        this.windSpeed = windSpeed;
-    }
-
     public long getSunrise() {
         return sunrise;
-    }
-
-    public void setSunrise(long sunrise) {
-        this.sunrise = sunrise;
     }
 
     public long getSunset() {
         return sunset;
     }
 
-    public void setSunset(long sunset) {
-        this.sunset = sunset;
-    }
-
     public long getDateTime() {
         return dateTime;
-    }
-
-    public void setDateTime(long dateTime) {
-        this.dateTime = dateTime;
     }
 
     @Override

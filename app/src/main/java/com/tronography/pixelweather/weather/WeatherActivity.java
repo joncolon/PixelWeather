@@ -2,6 +2,7 @@ package com.tronography.pixelweather.weather;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,8 +45,6 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
     @Inject
     WeatherPresenter presenter;
 
-    @Bind(R.id.search_toolbar)
-    Toolbar toolbar;
     @Bind(R.id.search_view)
     SearchView searchView;
     @Bind(R.id.forecast_list)
@@ -87,11 +86,10 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
         ((PixelWeatherApplication) getApplicationContext()).getAppComponent().inject(this);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
         activity = this;
         presenter.setView(this);
         adapter = new WeatherAdapter(results);
-        forecast_rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        forecast_rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         forecast_rv.setAdapter(adapter);
 
         searchView.onActionViewExpanded();
