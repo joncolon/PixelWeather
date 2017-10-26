@@ -32,6 +32,7 @@ public class WeatherPresenter {
     private final SharedPrefsUtils sharedPrefsUtils;
     private OpenWeatherClient client;
     private CompositeDisposable disposables = new CompositeDisposable();
+    private CurrentWeatherModel currentWeatherModel;
     private Weather.View view;
 
     @Inject
@@ -104,8 +105,8 @@ public class WeatherPresenter {
     }
 
     private void onGetCurrentSuccess(CurrentWeatherModel currentWeatherModelResult) {
-        view.showCurrentWeather(currentWeatherModelResult);
         getForecast(currentWeatherModelResult.getCity());
+        currentWeatherModel = currentWeatherModelResult;
     }
 
     private void onGetCurrentFailure(String error) {
@@ -115,7 +116,7 @@ public class WeatherPresenter {
 
     private void onGetForecastSuccess(List<ForecastModel> forecast) {
         view.showLoading(false);
-        view.showForecast(forecast);
+        view.showWeatherReport(currentWeatherModel, forecast);
     }
 
     private void onGetForecastFailure(String error) {

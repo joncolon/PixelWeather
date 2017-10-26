@@ -30,6 +30,4 @@ public class PixelWeatherApplication extends Application {
                 .sharedPrefModule(new SharedPrefModule())
                 .build();
     }
-
-
 }

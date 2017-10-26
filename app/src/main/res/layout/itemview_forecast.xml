@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:background="#ffffff"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/date_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:text="10/15"
-        android:textColor="#ffffff"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        android:textSize="20sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +28,7 @@
         android:textSize="13sp"
         android:visibility="visible"
         android:layout_marginStart="8dp"
-        app:layout_constraintStart_toEndOf="@id/date_tv"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/date_tv"
         tools:layout_editor_absoluteY="690dp" />
 
@@ -44,7 +42,7 @@
         android:textSize="13sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/date_tv"
-        app:layout_constraintStart_toEndOf="@id/date_tv" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/icon_iv"
@@ -53,8 +51,9 @@
         android:scaleType="fitXY"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/temp_max_tv"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
         tools:layout_editor_absoluteY="142dp" />
 
 
