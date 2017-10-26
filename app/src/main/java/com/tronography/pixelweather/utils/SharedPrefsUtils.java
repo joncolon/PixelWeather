@@ -21,12 +21,6 @@ public class SharedPrefsUtils {
         return prefs.getString(key, defValue);
     }
 
-    private void setSharedPreferencesData(SharedPreferences prefs, String key, Boolean defValue) {
-        prefs.edit()
-                .putBoolean(key, defValue)
-                .apply();
-    }
-
     private void setSharedPreferencesData(SharedPreferences prefs, String key, String defValue) {
         prefs.edit()
                 .putString(key, defValue)
@@ -44,6 +38,4 @@ public class SharedPrefsUtils {
     private SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
     }
-
-
 }

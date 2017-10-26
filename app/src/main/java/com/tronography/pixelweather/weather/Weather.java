@@ -7,12 +7,12 @@ import java.util.List;
 
 
 public interface Weather {
+
     interface View {
+
         void showLoading(boolean show);
 
-        void showCurrentWeather(CurrentWeatherModel currentWeatherModel);
-
-        void showForecast(List<ForecastModel> results);
+        void showWeatherReport(CurrentWeatherModel currentWeatherModel, List<ForecastModel> results);
 
         void showError(String error);
     }
