@@ -66,6 +66,7 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
             public boolean onQueryTextSubmit(String query) {
                 presenter.onQuerySubmitted(query);
                 KeyboardUtils.hideSoftKeyboard(activity);
+                searchView.clearFocus();
                 return true;
             }
 
@@ -79,15 +80,17 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        searchView.clearFocus();
+        presenter.checkLastQueriedCity();
+    }
+
+    @Override
     public void showWeatherReport(CurrentWeatherModel currentWeatherModel, List<ForecastModel> forecast) {
         adapter = new WeatherAdapter(currentWeatherModel, results);
         forecast_rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         forecast_rv.setAdapter(adapter);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(forecast_rv.getContext(),
-                DividerItemDecoration.VERTICAL);
-        forecast_rv.addItemDecoration(dividerItemDecoration);
-
 
         forecast_rv.setVisibility(VISIBLE);
         errorTv.setVisibility(GONE);
