@@ -41,6 +41,10 @@ public class ForecastResponse {
         return list;
     }
 
+    public void setList(List<ListItem> list) {
+        this.list = list;
+    }
+
     @Override
     public String toString() {
         return

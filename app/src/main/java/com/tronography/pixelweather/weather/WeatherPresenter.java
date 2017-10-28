@@ -2,7 +2,6 @@ package com.tronography.pixelweather.weather;
 
 import android.support.annotation.NonNull;
 
-import com.tronography.pixelweather.http.OpenWeatherApi;
 import com.tronography.pixelweather.http.OpenWeatherClient;
 import com.tronography.pixelweather.model.CurrentWeatherBuilder;
 import com.tronography.pixelweather.model.CurrentWeatherModel;
@@ -22,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
+import static com.tronography.pixelweather.http.OpenWeatherApi.*;
 import static io.reactivex.Observable.fromArray;
 
 
@@ -32,7 +32,6 @@ public class WeatherPresenter {
     private final SharedPrefsUtils sharedPrefsUtils;
     private OpenWeatherClient client;
     private CompositeDisposable disposables = new CompositeDisposable();
-    private CurrentWeatherModel currentWeatherModel;
     private Weather.View view;
 
     @Inject
@@ -43,7 +42,7 @@ public class WeatherPresenter {
 
     void onQuerySubmitted(String query) {
         view.showLoading(true);
-        getCurrentWeather(query);
+        getWeatherReport(query);
     }
 
     public void setView(Weather.View view) {
@@ -58,14 +57,14 @@ public class WeatherPresenter {
     void checkLastQueriedCity() {
         String lastCityQueried = sharedPrefsUtils.getLastCityQueried();
         if (lastCityQueried != null) {
-            getCurrentWeather(lastCityQueried);
+            getWeatherReport(lastCityQueried);
         }
     }
 
     //made public to be visible for testing
-    public void getForecast(String city) {
-        String usaCity = city + UNITED_STATES;
-        client.getForecast(usaCity, FAHRENHEIT, OpenWeatherApi.getApiKey())
+    public void getForecast(CurrentWeatherModel currentWeather) {
+        String usaCity = currentWeather.getCity() + UNITED_STATES;
+        client.getForecast(usaCity, FAHRENHEIT, getApiKey())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
@@ -73,7 +72,7 @@ public class WeatherPresenter {
                 .flatMapIterable(list -> list)
                 .map(this::mapToForecastModel)
                 .toList()
-                .subscribe(this::onGetForecastSuccess, e -> onGetForecastFailure(e.getMessage()));
+                .subscribe(forecast -> onGetForecastSuccess(forecast, currentWeather), e -> onGetForecastFailure(e.getMessage()));
     }
 
     private ForecastModel mapToForecastModel(ListItem listItem) {
@@ -89,12 +88,12 @@ public class WeatherPresenter {
     }
 
     //made public to be visible for testing
-    public void getCurrentWeather(String city) {
+    public void getWeatherReport(String city) {
         String usaCity = city + UNITED_STATES;
         sharedPrefsUtils.setLastCityQueried(usaCity);
 
         Single<CurrentWeatherResponse> request = client.getCurrentWeather(usaCity, FAHRENHEIT,
-                OpenWeatherApi.getApiKey());
+                getApiKey());
 
         disposables.add(request
                 .subscribeOn(Schedulers.io())
@@ -105,8 +104,7 @@ public class WeatherPresenter {
     }
 
     private void onGetCurrentSuccess(CurrentWeatherModel currentWeatherModelResult) {
-        getForecast(currentWeatherModelResult.getCity());
-        currentWeatherModel = currentWeatherModelResult;
+        getForecast(currentWeatherModelResult);
     }
 
     private void onGetCurrentFailure(String error) {
@@ -114,7 +112,7 @@ public class WeatherPresenter {
         view.showError(error);
     }
 
-    private void onGetForecastSuccess(List<ForecastModel> forecast) {
+    private void onGetForecastSuccess(List<ForecastModel> forecast, CurrentWeatherModel currentWeatherModel) {
         view.showLoading(false);
         view.showWeatherReport(currentWeatherModel, forecast);
     }

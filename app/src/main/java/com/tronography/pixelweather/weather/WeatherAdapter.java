@@ -53,7 +53,6 @@ class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             CurrentWeatherHolder VHcurrentWeather = (CurrentWeatherHolder) holder;
             VHcurrentWeather.bind(currentWeatherModel);
         } else if (holder instanceof ForecastHolder) {
-
             ForecastModel currentItem = getItem(position - 1);
             ForecastHolder VHforecast = (ForecastHolder) holder;
             VHforecast.bind(currentItem);
