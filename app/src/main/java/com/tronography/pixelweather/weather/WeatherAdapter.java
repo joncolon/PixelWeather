@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tronography.pixelweather.R;
 import com.tronography.pixelweather.model.CurrentWeatherModel;
 import com.tronography.pixelweather.model.ForecastModel;
-import com.tronography.pixelweather.utils.DateUtils;
+import com.tronography.pixelweather.utils.DateFormatter;
 
 import java.util.List;
 
@@ -118,7 +118,7 @@ class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         private void setDateTime(ForecastModel result) {
-            dateTv.setText(DateUtils.forecastDateFormatter(result.getDateTime()));
+            dateTv.setText(DateFormatter.forecastDateFormatter(result.getDateTime()));
         }
 
         private void setTempMax(ForecastModel result) {

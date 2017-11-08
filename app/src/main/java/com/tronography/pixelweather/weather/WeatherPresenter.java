@@ -20,15 +20,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-
-import static com.tronography.pixelweather.http.OpenWeatherApi.*;
+import static com.tronography.pixelweather.http.OpenWeatherApi.getApiKey;
 import static io.reactivex.Observable.fromArray;
 
 
 public class WeatherPresenter {
 
     private static final String FAHRENHEIT = "imperial";
-    private static final String UNITED_STATES = ",US";
+    private static final String UNITED_STATES = ", US";
     private final SharedPrefsUtils sharedPrefsUtils;
     private OpenWeatherClient client;
     private CompositeDisposable disposables = new CompositeDisposable();
@@ -42,6 +41,7 @@ public class WeatherPresenter {
 
     void onQuerySubmitted(String query) {
         view.showLoading(true);
+        sharedPrefsUtils.setLastCityQueried(query);
         getWeatherReport(query);
     }
 
@@ -61,9 +61,9 @@ public class WeatherPresenter {
         }
     }
 
-    //made public to be visible for testing
     public void getForecast(CurrentWeatherModel currentWeather) {
         String usaCity = currentWeather.getCity() + UNITED_STATES;
+
         client.getForecast(usaCity, FAHRENHEIT, getApiKey())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -77,20 +77,19 @@ public class WeatherPresenter {
 
     private ForecastModel mapToForecastModel(ListItem listItem) {
         ForecastBuilder forecastBuilder = new ForecastBuilder();
-        ForecastModel forecast = forecastBuilder
+
+        return forecastBuilder
                 .setDateTime(listItem.getDt())
                 .setIcon(listItem.getWeather().get(0).getIcon())
                 .setTempMax(listItem.getMain().getTempMax())
                 .setTempMin(listItem.getMain().getTempMin())
                 .createForecastModel();
-
-        return forecast;
     }
 
     //made public to be visible for testing
     public void getWeatherReport(String city) {
         String usaCity = city + UNITED_STATES;
-        sharedPrefsUtils.setLastCityQueried(usaCity);
+        System.out.println("usaCity = " + usaCity);
 
         Single<CurrentWeatherResponse> request = client.getCurrentWeather(usaCity, FAHRENHEIT,
                 getApiKey());

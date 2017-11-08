@@ -15,5 +15,7 @@ public interface Weather {
         void showWeatherReport(CurrentWeatherModel currentWeatherModel, List<ForecastModel> results);
 
         void showError(String error);
+
+        void showToast(String message);
     }
 }

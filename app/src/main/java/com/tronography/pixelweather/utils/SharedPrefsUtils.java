@@ -28,6 +28,7 @@ public class SharedPrefsUtils {
     }
 
     public void setLastCityQueried(String query) {
+        System.out.println("setLastCityQueried = " + query);
         setSharedPreferencesData(prefs, LAST_CITY_QUERIED_KEY, query);
     }
 
