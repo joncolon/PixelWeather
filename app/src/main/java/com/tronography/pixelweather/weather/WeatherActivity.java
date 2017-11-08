@@ -3,12 +3,12 @@ package com.tronography.pixelweather.weather;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tronography.pixelweather.PixelWeatherApplication;
 import com.tronography.pixelweather.R;
@@ -34,6 +34,7 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
 
     @Inject
     OpenWeatherClient client;
+
     @Inject
     WeatherPresenter presenter;
 
@@ -48,7 +49,7 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
 
     private WeatherAdapter adapter;
     private Activity activity;
-    private List<ForecastModel> results = new ArrayList<>();
+    private List<ForecastModel> forecast = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +65,11 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                presenter.onQuerySubmitted(query);
-                KeyboardUtils.hideSoftKeyboard(activity);
-                searchView.clearFocus();
+                if (!query.isEmpty()) {
+                    presenter.onQuerySubmitted(query);
+                    KeyboardUtils.hideSoftKeyboard(activity);
+                    searchView.clearFocus();
+                }
                 return true;
             }
 
@@ -82,20 +85,20 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
     @Override
     protected void onResume() {
         super.onResume();
-        searchView.clearFocus();
         presenter.checkLastQueriedCity();
+        searchView.clearFocus();
     }
 
     @Override
     public void showWeatherReport(CurrentWeatherModel currentWeatherModel, List<ForecastModel> forecast) {
-        adapter = new WeatherAdapter(currentWeatherModel, results);
+        adapter = new WeatherAdapter(currentWeatherModel, this.forecast);
         forecast_rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         forecast_rv.setAdapter(adapter);
 
         forecast_rv.setVisibility(VISIBLE);
         errorTv.setVisibility(GONE);
-        this.results.clear();
-        this.results.addAll(forecast);
+        this.forecast.clear();
+        this.forecast.addAll(forecast);
         adapter.notifyDataSetChanged();
     }
 
@@ -119,5 +122,10 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
     public void showError(String error) {
         errorTv.setVisibility(VISIBLE);
         errorTv.setText(error);
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
     }
 }
