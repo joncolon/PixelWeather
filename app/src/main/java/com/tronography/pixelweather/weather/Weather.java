@@ -2,6 +2,7 @@ package com.tronography.pixelweather.weather;
 
 import com.tronography.pixelweather.model.CurrentWeatherModel;
 import com.tronography.pixelweather.model.ForecastModel;
+import com.tronography.pixelweather.model.WeatherReport;
 
 import java.util.List;
 
@@ -12,10 +13,10 @@ public interface Weather {
 
         void showLoading(boolean show);
 
-        void showWeatherReport(CurrentWeatherModel currentWeatherModel, List<ForecastModel> results);
-
         void showError(String error);
 
         void showToast(String message);
+
+        void showWeatherReport(WeatherReport weatherReport);
     }
 }

@@ -26,7 +26,7 @@ public class ForecastBuilder {
         return this;
     }
 
-    public ForecastModel createForecastModel() {
+    public ForecastModel build() {
         return new ForecastModel(tempMax, tempMin, icon, dateTime);
     }
 }

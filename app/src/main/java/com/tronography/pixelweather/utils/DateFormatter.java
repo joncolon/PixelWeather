@@ -1,64 +1,56 @@
 package com.tronography.pixelweather.utils;
 
-import android.text.format.DateUtils;
-
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static android.text.format.DateUtils.isToday;
 
 
 public class DateFormatter {
+    private static Calendar calendar = GregorianCalendar.getInstance();
 
     public static String forecastDateFormatter(long timeInMilli) {
-        Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(timeInMilli * 1000);
 
-        int month = (calendar.get(Calendar.MONTH)) + 1;
-        int dayOfMonth = (calendar.get(Calendar.DAY_OF_MONTH));
-        int hourOfDay = (calendar.get(Calendar.HOUR));
-        int isAMorPM = (calendar.get(Calendar.AM_PM));
-
-        String hour = hourOfDay == 0 ? "12" : String.valueOf(hourOfDay);
-
-        String amPm = isAMorPM == 0 ? "am" : "pm";
-
         return new StringBuilder()
-                .append(getDayOfWeek(timeInMilli))
+                .append(getNameOfDay(timeInMilli))
                 .append("\n")
-                .append(month)
+                .append(getMonth())
                 .append("/")
-                .append(dayOfMonth)
+                .append(getDayOfMonth())
                 .append(" ")
-                .append(hour)
-                .append(amPm).toString();
+                .append(getHourOfDayInTwelveHourClock())
+                .append(getAMorPM())
+                .toString();
     }
 
-    public boolean isSameDay(long date1, long date2) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeInMillis(date1 * 1000);
-
-        int month = (calendar.get(Calendar.MONTH)) + 1;
-        int dayOfMonth = (calendar.get(Calendar.DAY_OF_MONTH));
+    private static String getHourOfDayInTwelveHourClock() {
         int hourOfDay = (calendar.get(Calendar.HOUR));
-        int isAMorPM = (calendar.get(Calendar.AM_PM));
-        return false;
+        String twelveHourClockHour = hourOfDay == 0 ? "12" : String.valueOf(hourOfDay);
+        return twelveHourClockHour;
     }
 
-    // convert milliseconds into the day of the week string
-    private static String getDayOfWeek(long msecs) {
-        GregorianCalendar cal = new GregorianCalendar();
+    private static String getAMorPM() {
+        int isAMorPM = (calendar.get(Calendar.AM_PM));
+        String amPm = isAMorPM == 0 ? "am" : "pm";
+        return amPm;
+    }
 
-        cal.setTime(new Date(msecs * 1000));
+    private static int getDayOfMonth() {
+        return (calendar.get(Calendar.DAY_OF_MONTH));
+    }
 
-        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+    private static int getMonth() {
+        return (calendar.get(Calendar.MONTH)) + 1;
+    }
 
-        if (isToday(msecs * 1000)){
+    private static String getNameOfDay(long timeInMilliseconds) {
+
+        if (isToday(timeInMilliseconds * 1000)){
             return "TODAY";
         }
 
-        switch (dayOfWeek) {
+        switch (getNameOfDay()) {
             case Calendar.MONDAY:
                 return "MON";
             case Calendar.TUESDAY:
@@ -76,5 +68,9 @@ public class DateFormatter {
         }
 
         return "Unknown";
+    }
+
+    private static int getNameOfDay() {
+        return calendar.get(Calendar.DAY_OF_WEEK);
     }
 }

@@ -14,13 +14,12 @@ import com.tronography.pixelweather.R;
 import com.tronography.pixelweather.model.CurrentWeatherModel;
 import com.tronography.pixelweather.model.ForecastModel;
 import com.tronography.pixelweather.utils.DateFormatter;
+import com.tronography.pixelweather.utils.IconUrlUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.tronography.pixelweather.utils.IconUrlUtils.getIconUrl;
 
 
 class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -46,6 +45,7 @@ class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         return null;
     }
+
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -82,13 +82,13 @@ class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class ForecastHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.date_tv)
+        @BindView(R.id.date_tv)
         TextView dateTv;
-        @Bind(R.id.temp_max_tv)
+        @BindView(R.id.temp_max_tv)
         TextView tempMaxTv;
-        @Bind(R.id.temp_min_tv)
+        @BindView(R.id.temp_min_tv)
         TextView tempMinTv;
-        @Bind(R.id.icon_iv)
+        @BindView(R.id.icon_iv)
         ImageView iconImage;
 
         private Context context;
@@ -108,8 +108,7 @@ class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private void setIcon(ForecastModel result) {
             Glide.with(context)
-                    .load(getIconUrl(result.getIcon()))
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .load(IconUrlUtils.Companion.getIconUrl(result.getIcon()))
                     .into(iconImage);
         }
 
@@ -128,19 +127,19 @@ class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class CurrentWeatherHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.current_temp_tv)
+        @BindView(R.id.current_temp_tv)
         TextView currentTempTv;
-        @Bind(R.id.temp_min_tv)
+        @BindView(R.id.temp_min_tv)
         TextView tempMinTv;
-        @Bind(R.id.temp_max_tv)
+        @BindView(R.id.temp_max_tv)
         TextView tempMaxTv;
-        @Bind(R.id.city_tv)
+        @BindView(R.id.city_tv)
         TextView cityTv;
-        @Bind(R.id.country_tv)
+        @BindView(R.id.country_tv)
         TextView countryTv;
-        @Bind(R.id.description_tv)
+        @BindView(R.id.description_tv)
         TextView descriptionTv;
-        @Bind(R.id.icon_iv)
+        @BindView(R.id.icon_iv)
         ImageView iconImage;
 
         private Context context;
@@ -179,8 +178,7 @@ class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private void setIcon(CurrentWeatherModel result) {
             Glide.with(context)
-                    .load(getIconUrl(result.getIcon()))
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .load(IconUrlUtils.Companion.getIconUrl(result.getIcon()))
                     .into(iconImage);
         }
 
