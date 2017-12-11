@@ -86,7 +86,7 @@ public class CurrentWeatherBuilder {
         return this;
     }
 
-    public CurrentWeatherModel createCurrentWeatherModel() {
+    public CurrentWeatherModel build() {
         return new CurrentWeatherModel(city, country, description, icon, clouds, humidity, pressure, tempMax, tempMin, currentTemp, windSpeed, sunrise, sunset, dateTime);
     }
 }

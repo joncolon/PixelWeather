@@ -15,6 +15,7 @@ import com.tronography.pixelweather.R;
 import com.tronography.pixelweather.http.OpenWeatherClient;
 import com.tronography.pixelweather.model.CurrentWeatherModel;
 import com.tronography.pixelweather.model.ForecastModel;
+import com.tronography.pixelweather.model.WeatherReport;
 import com.tronography.pixelweather.utils.KeyboardUtils;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
@@ -38,16 +39,15 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
     @Inject
     WeatherPresenter presenter;
 
-    @Bind(R.id.search_view)
+    @BindView(R.id.search_view)
     SearchView searchView;
-    @Bind(R.id.forecast_list)
+    @BindView(R.id.forecast_list)
     RecyclerView forecast_rv;
-    @Bind(R.id.weather_progress_spinner)
+    @BindView(R.id.weather_progress_spinner)
     ProgressBar spinner;
-    @Bind(R.id.weather_error_tv)
+    @BindView(R.id.weather_error_tv)
     TextView errorTv;
 
-    private WeatherAdapter adapter;
     private Activity activity;
     private List<ForecastModel> forecast = new ArrayList<>();
 
@@ -79,26 +79,24 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
             }
         });
 
-        presenter.checkLastQueriedCity();
+        presenter.showWeatherFromLastQueriedCity();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.checkLastQueriedCity();
+        presenter.showWeatherFromLastQueriedCity();
         searchView.clearFocus();
     }
 
     @Override
-    public void showWeatherReport(CurrentWeatherModel currentWeatherModel, List<ForecastModel> forecast) {
-        adapter = new WeatherAdapter(currentWeatherModel, this.forecast);
+    public void showWeatherReport(WeatherReport weatherReport) {
+        WeatherAdapter adapter = new WeatherAdapter(weatherReport.getCurrentWeather(), forecast);
         forecast_rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         forecast_rv.setAdapter(adapter);
-
         forecast_rv.setVisibility(VISIBLE);
         errorTv.setVisibility(GONE);
-        this.forecast.clear();
-        this.forecast.addAll(forecast);
+        forecast.addAll(weatherReport.getForecast());
         adapter.notifyDataSetChanged();
     }
 

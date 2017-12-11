@@ -9,9 +9,11 @@ import com.tronography.pixelweather.model.ForecastResponse;
 import com.tronography.pixelweather.model.Main;
 import com.tronography.pixelweather.model.Sys;
 import com.tronography.pixelweather.model.WeatherItem;
+import com.tronography.pixelweather.model.WeatherReport;
 import com.tronography.pixelweather.model.Wind;
 import com.tronography.pixelweather.utils.SharedPrefsUtils;
 import com.tronography.pixelweather.weather.Weather;
+import com.tronography.pixelweather.weather.WeatherInteractor;
 import com.tronography.pixelweather.weather.WeatherPresenter;
 
 import org.junit.Before;
@@ -29,8 +31,6 @@ import io.reactivex.Single;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,87 +41,38 @@ public class WeatherPresenterTest {
     public static RxImmediateSchedulerRule schedulers = new RxImmediateSchedulerRule();
 
     @Mock
-    OpenWeatherClient client;
+    WeatherInteractor weatherInteractor;
     @Mock
     Weather.View view;
     @Mock
     SharedPrefsUtils sharedPrefsUtils;
 
     private WeatherPresenter presenter;
-    private ForecastResponse forecastResponse;
-    private List<ForecastResponse> searchResults;
-    private CurrentWeatherResponse currentWeatherResponse;
-    private CurrentWeatherModel currentWeatherModel;
+    private WeatherReport weatherReport;
 
     @Before
     public void setup() {
-        presenter = new WeatherPresenter(client, sharedPrefsUtils);
+        presenter = new WeatherPresenter(sharedPrefsUtils, weatherInteractor);
         presenter.setView(view);
 
-        searchResults = new ArrayList<>();
-
-        forecastResponse = new ForecastResponse();
-        forecastResponse.setList(new ArrayList<>());
-
-        currentWeatherResponse = new CurrentWeatherResponse();
-        currentWeatherResponse.setName("new york");
-        currentWeatherResponse.setClouds(new Clouds());
-        currentWeatherResponse.getClouds().setAll(20);
-        currentWeatherResponse.setMain(new Main());
-        currentWeatherResponse.getMain().setTempMin(1);
-        currentWeatherResponse.getMain().setTempMax(2);
-        currentWeatherResponse.getMain().setTemp(2);
-        currentWeatherResponse.getMain().setHumidity(20);
-        currentWeatherResponse.getMain().setPressure(20);
-        currentWeatherResponse.setSys(new Sys());
-        currentWeatherResponse.getSys().setCountry("US");
-        currentWeatherResponse.getSys().setSunrise(10000);
-        currentWeatherResponse.getSys().setSunset(20000);
-        currentWeatherResponse.setDt(1508103000);
-        currentWeatherResponse.setWeather(new ArrayList<>());
-        currentWeatherResponse.getWeather().add(0, new WeatherItem());
-        currentWeatherResponse.getWeather().get(0).setIcon("01n");
-        currentWeatherResponse.getWeather().get(0).setMain("main");
-        currentWeatherResponse.getWeather().get(0).setDescription("description");
-        currentWeatherResponse.setWind(new Wind());
-        currentWeatherResponse.getWind().setSpeed(11);
-
-        CurrentWeatherBuilder currentWeatherBuilder = new CurrentWeatherBuilder();
-        currentWeatherModel = currentWeatherBuilder
-                .setCity(currentWeatherResponse.getName())
-                .setClouds(currentWeatherResponse.getClouds().getAll())
-                .setTempMax(currentWeatherResponse.getMain().getTempMax())
-                .setTempMin(currentWeatherResponse.getMain().getTempMin())
-                .setDescription(currentWeatherResponse.getWeather().get(0).getDescription())
-                .setIcon(currentWeatherResponse.getWeather().get(0).getIcon())
-                .setHumidity(currentWeatherResponse.getMain().getHumidity())
-                .setSunrise(currentWeatherResponse.getSys().getSunrise())
-                .setSunset(currentWeatherResponse.getSys().getSunset())
-                .setCountry(currentWeatherResponse.getSys().getCountry())
-                .setWindSpeed(currentWeatherResponse.getWind().getSpeed())
-                .setPressure(currentWeatherResponse.getMain().getPressure())
-                .setDateTime(currentWeatherResponse.getDt())
-                .setCurrentTemp(currentWeatherResponse.getMain().getTemp())
-                .createCurrentWeatherModel();
+        weatherReport = new WeatherReport();
     }
 
     @Test
-    public void whenGetForecastIsComplete_shouldShowResults() {
-        searchResults.add(forecastResponse);
+    public void whenShowWeatherReportIsComplete_shouldShowResults() {
+        when(weatherInteractor.getWeatherReport(anyString())).thenReturn(Single.just(weatherReport));
 
-        when(client.getForecast(anyString(), anyString(), anyString()))
-                .thenReturn(Single.just(forecastResponse));
+        presenter.showWeatherReport(anyString());
 
-        presenter.getForecast(currentWeatherModel);
-
-        verify(view).showWeatherReport(any(CurrentWeatherModel.class), anyList());
+        verify(view).showWeatherReport(any(WeatherReport.class));
     }
 
     @Test
-    public void whenGetCurrentIsComplete_shouldCallGetForecast() {
-        when(client.getCurrentWeather(anyString(), anyString(), anyString()))
-                .thenReturn(Single.just(currentWeatherResponse));
+    public void whenErrorGettingWeatherReport_shouldShowError() {
+        when(weatherInteractor.getWeatherReport(anyString())).thenReturn(Single.error(new Error("Error Message")));
 
-        presenter.getWeatherReport("new york");
+        presenter.showWeatherReport(anyString());
+
+        verify(view).showError(anyString());
     }
 }

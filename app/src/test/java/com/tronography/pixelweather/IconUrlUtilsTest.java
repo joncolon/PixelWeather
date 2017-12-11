@@ -14,6 +14,6 @@ public class IconUrlUtilsTest {
         String icon = "02d";
         String expectedResult = "http://openweathermap.org/img/w/02d.png";
 
-        assertEquals(expectedResult, IconUrlUtils.getIconUrl(icon));
+        assertEquals(expectedResult, IconUrlUtils.Companion.getIconUrl(icon));
     }
 }

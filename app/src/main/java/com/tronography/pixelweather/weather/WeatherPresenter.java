@@ -1,48 +1,30 @@
 package com.tronography.pixelweather.weather;
 
-import android.support.annotation.NonNull;
-
-import com.tronography.pixelweather.http.OpenWeatherClient;
-import com.tronography.pixelweather.model.CurrentWeatherBuilder;
-import com.tronography.pixelweather.model.CurrentWeatherModel;
-import com.tronography.pixelweather.model.CurrentWeatherResponse;
-import com.tronography.pixelweather.model.ForecastBuilder;
-import com.tronography.pixelweather.model.ForecastModel;
-import com.tronography.pixelweather.model.ListItem;
+import com.tronography.pixelweather.model.WeatherReport;
 import com.tronography.pixelweather.utils.SharedPrefsUtils;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.tronography.pixelweather.http.OpenWeatherApi.getApiKey;
-import static io.reactivex.Observable.fromArray;
+import io.reactivex.observers.DisposableSingleObserver;
 
 
 public class WeatherPresenter {
 
-    private static final String FAHRENHEIT = "imperial";
-    private static final String UNITED_STATES = ", US";
     private final SharedPrefsUtils sharedPrefsUtils;
-    private OpenWeatherClient client;
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private final WeatherInteractor weatherInteractor;
     private Weather.View view;
 
     @Inject
-    public WeatherPresenter(OpenWeatherClient client, SharedPrefsUtils sharedPrefsUtils) {
-        this.client = client;
+    public WeatherPresenter(SharedPrefsUtils sharedPrefsUtils, WeatherInteractor weatherInteractor) {
         this.sharedPrefsUtils = sharedPrefsUtils;
+        this.weatherInteractor = weatherInteractor;
     }
 
-    void onQuerySubmitted(String query) {
+    void onQuerySubmitted(String city) {
         view.showLoading(true);
-        sharedPrefsUtils.setLastCityQueried(query);
-        getWeatherReport(query);
+        sharedPrefsUtils.setLastCityQueried(city);
+        showWeatherReport(city);
     }
 
     public void setView(Weather.View view) {
@@ -51,97 +33,33 @@ public class WeatherPresenter {
 
     void release() {
         view = null;
-        disposables.clear();
     }
 
-    void checkLastQueriedCity() {
+    void showWeatherFromLastQueriedCity() {
         String lastCityQueried = sharedPrefsUtils.getLastCityQueried();
         if (lastCityQueried != null) {
-            getWeatherReport(lastCityQueried);
+            showWeatherReport(lastCityQueried);
         }
     }
 
-    public void getForecast(CurrentWeatherModel currentWeather) {
-        String usaCity = currentWeather.getCity() + UNITED_STATES;
-
-        client.getForecast(usaCity, FAHRENHEIT, getApiKey())
-                .subscribeOn(Schedulers.io())
+    public void showWeatherReport(String city){
+        weatherInteractor.getWeatherReport(city)
                 .observeOn(AndroidSchedulers.mainThread())
-                .toObservable()
-                .flatMap(forecastResponse -> fromArray(forecastResponse.getList()))
-                .flatMapIterable(list -> list)
-                .map(this::mapToForecastModel)
-                .toList()
-                .subscribe(forecast -> onGetForecastSuccess(forecast, currentWeather), e -> onGetForecastFailure(e.getMessage()));
-    }
+                .subscribe(new DisposableSingleObserver<WeatherReport>() {
 
-    private ForecastModel mapToForecastModel(ListItem listItem) {
-        ForecastBuilder forecastBuilder = new ForecastBuilder();
+            @Override
+            public void onSuccess(WeatherReport value) {
+                view.showLoading(false);
+                view.showWeatherReport(value);
+            }
 
-        return forecastBuilder
-                .setDateTime(listItem.getDt())
-                .setIcon(listItem.getWeather().get(0).getIcon())
-                .setTempMax(listItem.getMain().getTempMax())
-                .setTempMin(listItem.getMain().getTempMin())
-                .createForecastModel();
-    }
-
-    //made public to be visible for testing
-    public void getWeatherReport(String city) {
-        String usaCity = city + UNITED_STATES;
-        System.out.println("usaCity = " + usaCity);
-
-        Single<CurrentWeatherResponse> request = client.getCurrentWeather(usaCity, FAHRENHEIT,
-                getApiKey());
-
-        disposables.add(request
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(this::mapToCurrentWeatherModel)
-                .subscribe(this::onGetCurrentSuccess,
-                        e -> onGetCurrentFailure(e.getMessage())));
-    }
-
-    private void onGetCurrentSuccess(CurrentWeatherModel currentWeatherModelResult) {
-        getForecast(currentWeatherModelResult);
-    }
-
-    private void onGetCurrentFailure(String error) {
-        view.showLoading(false);
-        view.showError(error);
-    }
-
-    private void onGetForecastSuccess(List<ForecastModel> forecast, CurrentWeatherModel currentWeatherModel) {
-        view.showLoading(false);
-        view.showWeatherReport(currentWeatherModel, forecast);
-    }
-
-    private void onGetForecastFailure(String error) {
-        view.showError(error);
-    }
-
-    @NonNull
-    private CurrentWeatherModel mapToCurrentWeatherModel(CurrentWeatherResponse currentWeatherResponse) {
-
-        CurrentWeatherBuilder currentWeatherBuilder = new CurrentWeatherBuilder();
-        CurrentWeatherModel currentWeather = currentWeatherBuilder
-                .setCity(currentWeatherResponse.getName())
-                .setClouds(currentWeatherResponse.getClouds().getAll())
-                .setTempMax(currentWeatherResponse.getMain().getTempMax())
-                .setTempMin(currentWeatherResponse.getMain().getTempMin())
-                .setDescription(currentWeatherResponse.getWeather().get(0).getDescription())
-                .setIcon(currentWeatherResponse.getWeather().get(0).getIcon())
-                .setHumidity(currentWeatherResponse.getMain().getHumidity())
-                .setSunrise(currentWeatherResponse.getSys().getSunrise())
-                .setSunset(currentWeatherResponse.getSys().getSunset())
-                .setCountry(currentWeatherResponse.getSys().getCountry())
-                .setWindSpeed(currentWeatherResponse.getWind().getSpeed())
-                .setPressure(currentWeatherResponse.getMain().getPressure())
-                .setDateTime(currentWeatherResponse.getDt())
-                .setCurrentTemp(currentWeatherResponse.getMain().getTemp())
-                .createCurrentWeatherModel();
-
-        return currentWeather;
+            @Override
+            public void onError(Throwable e) {
+                view.showLoading(false);
+                view.showError(e.getMessage());
+                System.out.println("e = " + e.getMessage());
+            }
+        });
     }
 }
 
