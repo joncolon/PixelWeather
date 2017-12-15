@@ -121,9 +121,4 @@ public class WeatherActivity extends AppCompatActivity implements Weather.View {
         errorTv.setVisibility(VISIBLE);
         errorTv.setText(error);
     }
-
-    @Override
-    public void showToast(String message) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
-    }
 }

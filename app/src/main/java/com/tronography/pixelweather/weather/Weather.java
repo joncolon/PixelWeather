@@ -15,8 +15,6 @@ public interface Weather {
 
         void showError(String error);
 
-        void showToast(String message);
-
         void showWeatherReport(WeatherReport weatherReport);
     }
 }
