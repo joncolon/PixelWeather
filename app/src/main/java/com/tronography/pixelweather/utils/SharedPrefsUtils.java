@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 public class SharedPrefsUtils {
 
-    public static final String LAST_CITY_QUERIED_KEY = "last_city_queried";
+    private static final String LAST_CITY_QUERIED_KEY = "last_city_queried";
     private SharedPreferences prefs;
 
     @Inject

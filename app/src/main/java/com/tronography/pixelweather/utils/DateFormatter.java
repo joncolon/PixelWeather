@@ -2,8 +2,10 @@ package com.tronography.pixelweather.utils;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 
 import static android.text.format.DateUtils.isToday;
+import static java.util.Calendar.*;
 
 
 public class DateFormatter {
@@ -25,23 +27,23 @@ public class DateFormatter {
     }
 
     private static String getHourOfDayInTwelveHourClock() {
-        int hourOfDay = (calendar.get(Calendar.HOUR));
+        int hourOfDay = (calendar.get(HOUR));
         String twelveHourClockHour = hourOfDay == 0 ? "12" : String.valueOf(hourOfDay);
         return twelveHourClockHour;
     }
 
     private static String getAMorPM() {
-        int isAMorPM = (calendar.get(Calendar.AM_PM));
+        int isAMorPM = (calendar.get(AM_PM));
         String amPm = isAMorPM == 0 ? "am" : "pm";
         return amPm;
     }
 
     private static int getDayOfMonth() {
-        return (calendar.get(Calendar.DAY_OF_MONTH));
+        return (calendar.get(DAY_OF_MONTH));
     }
 
     private static int getMonth() {
-        return (calendar.get(Calendar.MONTH)) + 1;
+        return (calendar.get(MONTH)) + 1;
     }
 
     private static String getNameOfDay(long timeInMilliseconds) {
@@ -51,19 +53,19 @@ public class DateFormatter {
         }
 
         switch (getNameOfDay()) {
-            case Calendar.MONDAY:
+            case MONDAY:
                 return "MON";
-            case Calendar.TUESDAY:
+            case TUESDAY:
                 return "TUE";
-            case Calendar.WEDNESDAY:
+            case WEDNESDAY:
                 return "WED";
-            case Calendar.THURSDAY:
+            case THURSDAY:
                 return "THU";
-            case Calendar.FRIDAY:
+            case FRIDAY:
                 return "FRI";
-            case Calendar.SATURDAY:
+            case SATURDAY:
                 return "SAT";
-            case Calendar.SUNDAY:
+            case SUNDAY:
                 return "SUN";
         }
 
@@ -71,6 +73,6 @@ public class DateFormatter {
     }
 
     private static int getNameOfDay() {
-        return calendar.get(Calendar.DAY_OF_WEEK);
+        return calendar.get(DAY_OF_WEEK);
     }
 }
