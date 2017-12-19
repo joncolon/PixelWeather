@@ -15,6 +15,6 @@ public class DateFormatterTest {
         long dateToFormat = 1508095680;
         String expectedResult = "SUN\n10/15 3pm";
 
-        Assert.assertEquals(expectedResult, DateFormatter.forecastDateFormatter(dateToFormat));
+        Assert.assertEquals(expectedResult, DateFormatter.INSTANCE.forecastDateFormatter(dateToFormat));
     }
 }

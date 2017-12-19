@@ -3,6 +3,7 @@ package com.tronography.pixelweather;
 import com.tronography.pixelweather.model.WeatherReport;
 import com.tronography.pixelweather.utils.SharedPrefsUtils;
 import com.tronography.pixelweather.weather.Weather;
+import com.tronography.pixelweather.weather.WeatherInteractor;
 import com.tronography.pixelweather.weather.WeatherPresenter;
 
 import org.junit.Before;

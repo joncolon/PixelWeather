@@ -2,6 +2,7 @@ package com.tronography.pixelweather.weather;
 
 import android.support.annotation.NonNull;
 
+import com.tronography.pixelweather.http.OpenWeatherApi;
 import com.tronography.pixelweather.http.OpenWeatherClient;
 import com.tronography.pixelweather.model.CurrentWeatherBuilder;
 import com.tronography.pixelweather.model.CurrentWeatherModel;
@@ -20,7 +21,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.tronography.pixelweather.http.OpenWeatherApi.getApiKey;
+import static com.tronography.pixelweather.http.OpenWeatherApi.Companion;
 import static io.reactivex.Observable.fromArray;
 
 
@@ -53,8 +54,8 @@ public class WeatherInteractor {
         this.city = city;
     }
 
-    Single<CurrentWeatherModel> getCurrentWeather() {
-        return client.getCurrentWeather(city, FAHRENHEIT, getApiKey())
+    private Single<CurrentWeatherModel> getCurrentWeather() {
+        return client.getCurrentWeather(city, FAHRENHEIT, OpenWeatherApi.Companion.getApiKey())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(this::buildCurrentWeatherModel);
@@ -84,7 +85,7 @@ public class WeatherInteractor {
         return currentWeather;
     }
     private Single<List<ForecastModel>> getForecastReport() {
-        Single<ForecastResponse> request = client.getForecast(city, FAHRENHEIT, getApiKey());
+        Single<ForecastResponse> request = client.getForecast(city, FAHRENHEIT, Companion.getApiKey());
 
         return request
                 .subscribeOn(Schedulers.io())
