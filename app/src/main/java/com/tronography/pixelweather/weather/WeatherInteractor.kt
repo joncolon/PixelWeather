@@ -1,5 +1,6 @@
 package com.tronography.pixelweather.weather
 
+import android.icu.util.MeasureUnit.FAHRENHEIT
 import com.tronography.pixelweather.http.OpenWeatherApi
 import com.tronography.pixelweather.http.OpenWeatherClient
 import com.tronography.pixelweather.model.*
@@ -13,11 +14,9 @@ import javax.inject.Inject
 
 class WeatherInteractor @Inject
 constructor(private val client: OpenWeatherClient) {
+    private val FAHRENHEIT = "imperial"
     private var city: String? = null
 
-    companion object {
-        private val FAHRENHEIT = "imperial"
-    }
 
     fun getWeatherReport(city: String): Single<WeatherReport> {
         setCity(city)
@@ -48,7 +47,7 @@ constructor(private val client: OpenWeatherClient) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
-                .flatMap { forecastResponse -> fromArray(forecastResponse.list!!) }
+                .flatMap { forecastResponse -> fromArray(forecastResponse.list) }
                 .flatMapIterable { list -> list }
                 .map { response: ListItem? ->
                     return@map buildForecastModel(response)
@@ -61,20 +60,20 @@ constructor(private val client: OpenWeatherClient) {
         val currentWeatherBuilder = CurrentWeatherBuilder()
 
         return currentWeatherBuilder
-                .setCity(currentWeatherResponse!!.name!!)
-                .setClouds(currentWeatherResponse.clouds!!.all)
-                .setTempMax(currentWeatherResponse.main!!.tempMax)
-                .setTempMin(currentWeatherResponse.main!!.tempMin)
-                .setDescription(currentWeatherResponse.weather!![0].description!!)
-                .setIcon(currentWeatherResponse.weather!![0].icon!!)
-                .setHumidity(currentWeatherResponse.main!!.humidity)
-                .setSunrise(currentWeatherResponse.sys!!.sunrise.toLong())
-                .setSunset(currentWeatherResponse.sys!!.sunset.toLong())
-                .setCountry(currentWeatherResponse.sys!!.country!!)
-                .setWindSpeed(currentWeatherResponse.wind!!.speed)
-                .setPressure(currentWeatherResponse.main!!.pressure)
+                .setCity(currentWeatherResponse!!.name)
+                .setClouds(currentWeatherResponse.clouds.all)
+                .setTempMax(currentWeatherResponse.main.tempMax)
+                .setTempMin(currentWeatherResponse.main.tempMin)
+                .setDescription(currentWeatherResponse.weather[0].description)
+                .setIcon(currentWeatherResponse.weather[0].icon)
+                .setHumidity(currentWeatherResponse.main.humidity)
+                .setSunrise(currentWeatherResponse.sys.sunrise.toLong())
+                .setSunset(currentWeatherResponse.sys.sunset.toLong())
+                .setCountry(currentWeatherResponse.sys.country)
+                .setWindSpeed(currentWeatherResponse.wind.speed)
+                .setPressure(currentWeatherResponse.main.pressure)
                 .setDateTime(currentWeatherResponse.dt.toLong())
-                .setCurrentTemp(currentWeatherResponse.main!!.temp)
+                .setCurrentTemp(currentWeatherResponse.main.temp)
                 .build()
     }
 
@@ -83,9 +82,9 @@ constructor(private val client: OpenWeatherClient) {
 
         return forecastBuilder
                 .setDateTime(listItem!!.dt.toLong())
-                .setIcon(listItem.weather!![0].icon!!)
-                .setTempMax(listItem.main!!.tempMax)
-                .setTempMin(listItem.main!!.tempMin)
+                .setIcon(listItem.weather[0].icon)
+                .setTempMax(listItem.main.tempMax)
+                .setTempMin(listItem.main.tempMin)
                 .build()
     }
 }

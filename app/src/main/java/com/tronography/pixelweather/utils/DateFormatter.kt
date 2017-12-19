@@ -1,24 +1,26 @@
 package com.tronography.pixelweather.utils
 
-import java.util.GregorianCalendar
-
 import android.text.format.DateUtils.isToday
+import java.util.*
 import java.util.Calendar.*
 
 
 object DateFormatter {
-    private val calendar = GregorianCalendar.getInstance()
+    private val calendar: Calendar = GregorianCalendar.getInstance()
+    private const val AM: String = "am"
+    private const val PM: String = "pm"
+    private const val TWELVE: String = "12"
 
     private val hourOfDayInTwelveHourClock: String
         get() {
-            val hourOfDay = calendar.get(HOUR)
-            return if (hourOfDay == 0) "12" else hourOfDay.toString()
+            val hourOfDay: Int = calendar.get(HOUR)
+            if (hourOfDay.equals(0)) return TWELVE else return hourOfDay.toString()
         }
 
     private val aMorPM: String
         get() {
             val isAMorPM = calendar.get(AM_PM)
-            return if (isAMorPM == 0) "am" else "pm"
+            if (isAMorPM.equals(0)) return AM else return PM
         }
 
     private val dayOfMonth: Int
