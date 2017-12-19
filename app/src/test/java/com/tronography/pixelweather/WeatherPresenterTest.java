@@ -1,16 +1,6 @@
 package com.tronography.pixelweather;
 
-import com.tronography.pixelweather.http.OpenWeatherClient;
-import com.tronography.pixelweather.model.Clouds;
-import com.tronography.pixelweather.model.CurrentWeatherBuilder;
-import com.tronography.pixelweather.model.CurrentWeatherModel;
-import com.tronography.pixelweather.model.CurrentWeatherResponse;
-import com.tronography.pixelweather.model.ForecastResponse;
-import com.tronography.pixelweather.model.Main;
-import com.tronography.pixelweather.model.Sys;
-import com.tronography.pixelweather.model.WeatherItem;
 import com.tronography.pixelweather.model.WeatherReport;
-import com.tronography.pixelweather.model.Wind;
 import com.tronography.pixelweather.utils.SharedPrefsUtils;
 import com.tronography.pixelweather.weather.Weather;
 import com.tronography.pixelweather.weather.WeatherInteractor;
@@ -23,13 +13,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.Single;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
