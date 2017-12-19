@@ -16,5 +16,4 @@ class CurrentWeatherModel internal constructor(
         val sunrise: Long,
         val sunset: Long,
         val dateTime: Long
-) {
-}
+)

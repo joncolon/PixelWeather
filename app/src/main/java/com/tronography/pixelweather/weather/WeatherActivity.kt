@@ -48,7 +48,7 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
         searchView!!.onActionViewExpanded()
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                if (!query.isEmpty()) {
+                if (query.isEmpty().not()) {
                     presenter.onQuerySubmitted(query)
                     KeyboardUtils.hideSoftKeyboard(activity as WeatherActivity)
                     searchView!!.clearFocus()
@@ -72,9 +72,14 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
 
     override fun showWeatherReport(weatherReport: WeatherReport) {
         val adapter = WeatherAdapter(weatherReport.currentWeather, forecast)
-        forecast_rv!!.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        forecast_rv!!.adapter = adapter
+        forecast_rv!!.layoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+        )
         forecast_rv!!.visibility = VISIBLE
+        forecast_rv!!.scheduleLayoutAnimation();
+        forecast_rv!!.adapter = adapter
         errorTv!!.visibility = GONE
         forecast.addAll(weatherReport.forecast!!)
         adapter.notifyDataSetChanged()
