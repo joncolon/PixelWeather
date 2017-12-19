@@ -18,4 +18,14 @@ class ForecastResponse {
 
     @SerializedName("list")
     var list: List<ListItem>? = null
+
+    override fun toString(): String {
+        return "ForecastResponse{" +
+                "city = '" + city + '\'' +
+                ",cnt = '" + cnt + '\'' +
+                ",cod = '" + cod + '\'' +
+                ",message = '" + message + '\'' +
+                ",list = '" + list + '\'' +
+                "}"
+    }
 }
