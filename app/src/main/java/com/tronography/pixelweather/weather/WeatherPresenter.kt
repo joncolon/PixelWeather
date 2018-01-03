@@ -15,7 +15,7 @@ constructor(
     private var view: Weather.View? = null
 
     fun onQuerySubmitted(city: String) {
-        view!!.showLoading(true)
+        view?.showLoading(true)
         sharedPrefsUtils.lastCityQueried = city
         showWeatherReport(city)
     }
@@ -41,13 +41,13 @@ constructor(
                 .subscribe(object : DisposableSingleObserver<WeatherReport>() {
 
                     override fun onSuccess(value: WeatherReport) {
-                        view!!.showLoading(false)
-                        view!!.showWeatherReport(value)
+                        view?.showLoading(false)
+                        view?.showWeatherReport(value)
                     }
 
                     override fun onError(e: Throwable) {
-                        view!!.showLoading(false)
-                        view!!.showError(e.message)
+                        view?.showLoading(false)
+                        view?.showError(e.message)
                         println("e = " + e.message)
                     }
                 })

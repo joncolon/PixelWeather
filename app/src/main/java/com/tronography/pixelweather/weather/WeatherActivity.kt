@@ -34,7 +34,7 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
-        (applicationContext as PixelWeatherApplication).appComponent!!.inject(this)
+        (applicationContext as PixelWeatherApplication).appComponent?.inject(this)
 
         activity = this
         presenter.setView(this)
@@ -45,13 +45,13 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
         errorTv = findViewById(R.id.weather_error_tv) as TextView
         forecast_rv = findViewById(R.id.forecast_list) as RecyclerView
 
-        searchView!!.onActionViewExpanded()
-        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView?.onActionViewExpanded()
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isEmpty().not()) {
                     presenter.onQuerySubmitted(query)
                     KeyboardUtils.hideSoftKeyboard(activity as WeatherActivity)
-                    searchView!!.clearFocus()
+                    searchView?.clearFocus()
                 }
                 return true
             }
@@ -67,29 +67,30 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
     override fun onResume() {
         super.onResume()
         presenter.showWeatherFromLastQueriedCity()
-        searchView!!.clearFocus()
+        searchView?.clearFocus()
     }
 
     override fun showWeatherReport(weatherReport: WeatherReport) {
         val adapter = WeatherAdapter(weatherReport.currentWeather, forecast)
-        forecast_rv!!.layoutManager = LinearLayoutManager(
+        forecast_rv?.layoutManager = LinearLayoutManager(
                 this,
                 LinearLayoutManager.VERTICAL,
                 false
         )
-        forecast_rv!!.visibility = VISIBLE
-        forecast_rv!!.scheduleLayoutAnimation();
-        forecast_rv!!.adapter = adapter
-        errorTv!!.visibility = GONE
-        forecast.addAll(weatherReport.forecast!!)
+        forecast_rv?.visibility = VISIBLE
+        forecast_rv?.scheduleLayoutAnimation();
+        forecast_rv?.adapter = adapter
+        errorTv?.visibility = GONE
+        forecast.clear()
+        weatherReport.forecast?.let { forecast.addAll(it) }
         adapter.notifyDataSetChanged()
     }
 
     override fun showLoading(show: Boolean) = if (show) {
-        forecast_rv!!.visibility = GONE
-        spinner!!.visibility = VISIBLE
+        forecast_rv?.visibility = GONE
+        spinner?.visibility = VISIBLE
     } else {
-        spinner!!.visibility = GONE
+        spinner?.visibility = GONE
     }
 
     override fun onDestroy() {
@@ -98,7 +99,7 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
     }
 
     override fun showError(error: String?) {
-        errorTv!!.visibility = VISIBLE
-        errorTv!!.text = error
+        errorTv?.visibility = VISIBLE
+        errorTv?.text = error
     }
 }
