@@ -1,5 +1,6 @@
 package com.tronography.pixelweather.weather
 
+import android.util.Log
 import com.tronography.pixelweather.model.WeatherReport
 import com.tronography.pixelweather.utils.SharedPrefsUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,7 +49,7 @@ constructor(
                     override fun onError(e: Throwable) {
                         view?.showLoading(false)
                         view?.showError(e.message)
-                        println("e = " + e.message)
+                        Log.e("ERROR: ","e = " + e.stackTrace.toString())
                     }
                 })
     }

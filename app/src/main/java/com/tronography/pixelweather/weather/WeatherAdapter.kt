@@ -7,16 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.bumptech.glide.Glide
 import com.tronography.pixelweather.R
 import com.tronography.pixelweather.model.CurrentWeatherModel
-import com.tronography.pixelweather.model.ForecastModel
-import com.tronography.pixelweather.utils.DateFormatter
+import com.tronography.pixelweather.model.FiveDayForecastModel
 import com.tronography.pixelweather.utils.IconUrlUtils
+import java.util.*
 
 
-internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherModel?, private val forecast: List<ForecastModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+internal class WeatherAdapter(
+        private val currentWeatherModel: CurrentWeatherModel?,
+        private val fiveDayForecast: ArrayList<FiveDayForecastModel>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder? {
         if (viewType == TYPE_CURRENT_WEATHER) {
@@ -30,6 +32,7 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
     }
 
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CurrentWeatherHolder) {
             holder.bind(currentWeatherModel)
@@ -39,8 +42,8 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
         }
     }
 
-    private fun getItem(position: Int): ForecastModel {
-        return forecast[position]
+    private fun getItem(position: Int): FiveDayForecastModel {
+        return fiveDayForecast[position]
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -53,7 +56,8 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
 
 
     override fun getItemCount(): Int {
-        return forecast.size
+        val spaceForCurrentWeatherViewHolder = 1
+        return fiveDayForecast.size + spaceForCurrentWeatherViewHolder
     }
 
     internal inner class ForecastHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -73,28 +77,28 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
             iconImage = itemView.findViewById<ImageView>(R.id.icon_iv)
         }
 
-        fun bind(result: ForecastModel) {
+        fun bind(result: FiveDayForecastModel) {
             setDateTime(result)
             setTempMax(result)
             setTempMin(result)
             setIcon(result)
         }
 
-        private fun setIcon(result: ForecastModel) {
+        private fun setIcon(result: FiveDayForecastModel) {
             Glide.with(context)
                     .load(IconUrlUtils.getIconUrl(result.icon))
                     .into(iconImage!!)
         }
 
-        private fun setTempMin(result: ForecastModel) {
+        private fun setTempMin(result: FiveDayForecastModel) {
             tempMinTv!!.text = result.tempMin.toInt().toString()
         }
 
-        private fun setDateTime(result: ForecastModel) {
-            dateTv!!.text = DateFormatter.forecastDateFormatter(result.dateTime)
+        private fun setDateTime(result: FiveDayForecastModel) {
+            dateTv!!.text = result.dayOfWeek
         }
 
-        private fun setTempMax(result: ForecastModel) {
+        private fun setTempMax(result: FiveDayForecastModel) {
             tempMaxTv!!.text = result.tempMax.toInt().toString()
         }
     }
@@ -164,7 +168,6 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
     }
 
     companion object {
-
         private val TYPE_CURRENT_WEATHER = 0
         private val TYPE_FORECAST = 1
     }

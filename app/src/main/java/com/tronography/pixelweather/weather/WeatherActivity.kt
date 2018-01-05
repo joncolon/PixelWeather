@@ -12,7 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.tronography.pixelweather.PixelWeatherApplication
 import com.tronography.pixelweather.R
-import com.tronography.pixelweather.model.ForecastModel
+import com.tronography.pixelweather.model.FiveDayForecastModel
 import com.tronography.pixelweather.model.WeatherReport
 import com.tronography.pixelweather.utils.KeyboardUtils
 import java.util.*
@@ -29,7 +29,7 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
     internal var errorTv: TextView? = null
 
     private var activity: Activity? = null
-    private val forecast = ArrayList<ForecastModel>()
+    private val forecast = ArrayList<FiveDayForecastModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +82,7 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
         forecast_rv?.adapter = adapter
         errorTv?.visibility = GONE
         forecast.clear()
-        weatherReport.forecast?.let { forecast.addAll(it) }
+        weatherReport.hourlyForecast?.let { forecast.addAll(it) }
         adapter.notifyDataSetChanged()
     }
 

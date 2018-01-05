@@ -1,5 +1,7 @@
 package com.tronography.pixelweather.model
 
+import com.tronography.pixelweather.utils.DateFormatter
+
 
 class CurrentWeatherModel internal constructor(
         val city: String,
@@ -16,4 +18,6 @@ class CurrentWeatherModel internal constructor(
         val sunrise: Long,
         val sunset: Long,
         val dateTime: Long
-)
+) {
+    var dayOfWeek: String = DateFormatter.dayFormat(dateTime)
+}

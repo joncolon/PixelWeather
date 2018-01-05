@@ -1,6 +1,5 @@
 package com.tronography.pixelweather.weather
 
-import android.icu.util.MeasureUnit.FAHRENHEIT
 import com.tronography.pixelweather.http.OpenWeatherApi
 import com.tronography.pixelweather.http.OpenWeatherClient
 import com.tronography.pixelweather.model.*
@@ -21,9 +20,9 @@ constructor(private val client: OpenWeatherClient) {
     fun getWeatherReport(city: String): Single<WeatherReport> {
         setCity(city)
         val currentWeather = currentWeather
-        val forecastReport = forecastReport
+        val forecastReport = hourlyForecastReport
 
-        return Single.zip<CurrentWeatherModel, List<ForecastModel>, WeatherReport>(
+        return Single.zip<CurrentWeatherModel, List<FiveDayForecastModel>, WeatherReport>(
                 currentWeather,
                 forecastReport,
                 BiFunction(::WeatherReport))
@@ -38,56 +37,104 @@ constructor(private val client: OpenWeatherClient) {
         get() = client.getCurrentWeather(city!!, FAHRENHEIT, OpenWeatherApi.apiKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { response: CurrentWeatherResponse? ->
+                .map { response: CurrentWeatherResponse ->
                     return@map buildCurrentWeatherModel(response)
                 }
 
-    private val forecastReport: Single<List<ForecastModel>>
+    private val hourlyForecastReport: Single<List<FiveDayForecastModel>>?
         get() = client.getForecast(city!!, FAHRENHEIT, OpenWeatherApi.apiKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
                 .flatMap { forecastResponse -> fromArray(forecastResponse.list) }
                 .flatMapIterable { list -> list }
-                .map { response: ListItem? ->
+                .map { response: ListItem ->
                     return@map buildForecastModel(response)
                 }
                 .toList()
+                .map {list:MutableList<HourlyForecastModel> ->
+                    return@map buildFiveDayForecast(list) }
 
 
+    private fun buildCurrentWeatherModel(currentWeatherResponse: CurrentWeatherResponse): CurrentWeatherModel {
+        val currentWeather = CurrentWeatherModel(
+                currentWeatherResponse.name,
+                currentWeatherResponse.sys.country,
+                currentWeatherResponse.weather[0].description,
+                currentWeatherResponse.weather[0].icon,
+                currentWeatherResponse.clouds.all,
+                currentWeatherResponse.main.humidity,
+                currentWeatherResponse.main.pressure,
+                currentWeatherResponse.main.tempMax,
+                currentWeatherResponse.main.tempMin,
+                currentWeatherResponse.main.temp,
+                currentWeatherResponse.wind.speed,
+                currentWeatherResponse.sys.sunrise.toLong(),
+                currentWeatherResponse.sys.sunset.toLong(),
+                currentWeatherResponse.dt.toLong())
 
-    private fun buildCurrentWeatherModel(currentWeatherResponse: CurrentWeatherResponse?): CurrentWeatherModel {
-        val currentWeatherBuilder = CurrentWeatherBuilder()
-
-        return currentWeatherBuilder
-                .setCity(currentWeatherResponse!!.name)
-                .setClouds(currentWeatherResponse.clouds.all)
-                .setTempMax(currentWeatherResponse.main.tempMax)
-                .setTempMin(currentWeatherResponse.main.tempMin)
-                .setDescription(currentWeatherResponse.weather[0].description)
-                .setIcon(currentWeatherResponse.weather[0].icon)
-                .setHumidity(currentWeatherResponse.main.humidity)
-                .setSunrise(currentWeatherResponse.sys.sunrise.toLong())
-                .setSunset(currentWeatherResponse.sys.sunset.toLong())
-                .setCountry(currentWeatherResponse.sys.country)
-                .setWindSpeed(currentWeatherResponse.wind.speed)
-                .setPressure(currentWeatherResponse.main.pressure)
-                .setDateTime(currentWeatherResponse.dt.toLong())
-                .setCurrentTemp(currentWeatherResponse.main.temp)
-                .build()
+        return currentWeather
     }
 
-    private fun buildForecastModel(listItem: ListItem?): ForecastModel {
-        val forecastBuilder = ForecastBuilder()
+    fun buildFiveDayForecast(hourlyForecastModel: MutableList<HourlyForecastModel>): List<FiveDayForecastModel> {
+        val fiveDayMap: LinkedHashMap<String, FiveDayForecastModel> = LinkedHashMap()
 
-        return forecastBuilder
-                .setDateTime(listItem!!.dt.toLong())
-                .setIcon(listItem.weather[0].icon)
-                .setTempMax(listItem.main.tempMax)
-                .setTempMin(listItem.main.tempMin)
-                .build()
+        for (i in hourlyForecastModel.indices) {
+            val day = hourlyForecastModel.get(i).dayOfWeek
+
+            println(day)
+            val forecast = hourlyForecastModel.get(i)
+
+            if (!day.equals("TODAY")) {
+                if (fiveDayMap.get(day) == null) {
+                    val fiveDayModel = FiveDayForecastModel(
+                            forecast.tempMax,
+                            forecast.tempMin,
+                            forecast.icon,
+                            forecast.dayOfWeek
+                    )
+                    fiveDayModel.hourlyForecast.add(forecast)
+                    fiveDayMap.put(hourlyForecastModel.get(i).dayOfWeek, fiveDayModel)
+                } else {
+                    val fiveDayModel = fiveDayMap.get(day);
+                    fiveDayModel?.hourlyForecast?.add(forecast)
+
+                    if (fiveDayModel?.tempMax!! < forecast.tempMax) {
+                        fiveDayModel.tempMax = forecast.tempMax
+                    }
+
+                    if (fiveDayModel.tempMin!! > forecast.tempMin) {
+                        fiveDayModel.tempMin = forecast.tempMin
+                    }
+
+                    fiveDayMap.put(day, fiveDayModel)
+                }
+            }
+        }
+
+        val fiveDayList = fiveDayMap.values.toList()
+
+        for (forecast in fiveDayList) {
+            println(forecast.toString())
+        }
+        return fiveDayList
     }
 }
+
+private fun buildForecastModel(listItem: ListItem): HourlyForecastModel {
+
+    val forecast = HourlyForecastModel(
+            listItem.main.tempMax,
+            listItem.main.tempMin,
+            listItem.weather[0].icon,
+            listItem.dt.toLong()
+    )
+
+    return forecast
+}
+
+
+
 
 
 
