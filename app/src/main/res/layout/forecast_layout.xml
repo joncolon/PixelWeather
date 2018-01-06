@@ -3,50 +3,49 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorAccent"
     android:layout_width="wrap_content"
+    android:layout_weight=".20"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    android:padding="8dp">
+    tools:showIn="@layout/content_weather">
 
     <TextView
         android:id="@+id/date_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="MON"
-        android:textSize="20sp"
         android:textColor="@color/colorWhite"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="visible"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/icon_iv"
+        app:layout_constraintEnd_toEndOf="@id/icon_iv"
         app:layout_constraintStart_toStartOf="@+id/icon_iv"
-        app:layout_constraintEnd_toEndOf="@id/icon_iv"/>
+        tools:text="MON"/>
 
     <TextView
         android:id="@+id/temp_max_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="99°"
+        android:layout_marginBottom="16dp"
         android:textColor="@color/colorWhite"
         android:textSize="13sp"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/icon_iv"
-        app:layout_constraintStart_toStartOf="@id/icon_iv"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/temp_min_tv"
+        app:layout_constraintStart_toStartOf="@id/icon_iv"
+        tools:text="99"/>
 
     <TextView
         android:id="@+id/temp_min_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="92°"
+        android:layout_marginBottom="16dp"
         android:textColor="@color/colorWhite"
         android:textSize="13sp"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/icon_iv"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/icon_iv" />
+        app:layout_constraintEnd_toEndOf="@+id/icon_iv"
+        app:layout_constraintStart_toEndOf="@+id/temp_max_tv"
+        tools:text="92"/>
 
     <ImageView
         android:id="@+id/icon_iv"
@@ -54,11 +53,9 @@
         android:layout_height="50dp"
         android:scaleType="fitXY"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/temp_max_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date_tv"
-        tools:src="@drawable/grass_background"
+        tools:src="@mipmap/ic_launcher_round"
         />
-
-
 </android.support.constraint.ConstraintLayout>

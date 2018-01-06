@@ -6,11 +6,11 @@ package com.tronography.pixelweather.model
 
 class WeatherReport {
     var currentWeather: CurrentWeatherModel? = null
-    var hourlyForecast: List<FiveDayForecastModel>? = null
+    lateinit var fiveDayForecast: List<FiveDayForecastModel>
 
-    constructor(currentWeather: CurrentWeatherModel, hourlyForecast: List<FiveDayForecastModel>) {
+    constructor(currentWeather: CurrentWeatherModel, fiveDayForecast: List<FiveDayForecastModel>) {
         this.currentWeather = currentWeather
-        this.hourlyForecast = hourlyForecast
+        this.fiveDayForecast = fiveDayForecast
     }
 
     constructor() {}

@@ -1,8 +1,5 @@
 package com.tronography.pixelweather.model
 
-import java.util.*
-import kotlin.collections.ArrayList
-
 /**
  * Created by jonat on 1/3/2018.
  */
@@ -13,9 +10,11 @@ class FiveDayForecastModel(
         var icon: String,
         var dayOfWeek: String
 ) {
-    var hourlyForecast: MutableList<HourlyForecastModel> = ArrayList<HourlyForecastModel>()
+    lateinit var hourlyForecast: MutableList<HourlyForecastModel>
+
+    lateinit var twelveHourForecast: MutableList<HourlyForecastModel>
 
     override fun toString(): String {
-        return "FiveDayForecastModel(tempMax=$tempMax, tempMin=$tempMin, icon=$icon, dayOfWeek=$dayOfWeek, hourlyForecast=$hourlyForecast)"
+        return "FiveDayForecastModel(tempMax=$tempMax, tempMin=$tempMin, icon=$icon, dayOfWeek=$dayOfWeek, fiveDayForecast=$hourlyForecast)"
     }
 }

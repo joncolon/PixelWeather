@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:background="@drawable/gradient_sky"
     tools:context=".weather.WeatherActivity">
 
     <TextView
@@ -18,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="192dp" />
+        tools:layout_editor_absoluteX="192dp"/>
 
     <ProgressBar
         android:id="@+id/weather_progress_spinner"
@@ -29,17 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="192dp" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:src="@drawable/grass_background"
-        android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteX="8dp" />
+        tools:layout_editor_absoluteX="192dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/forecast_list"
@@ -50,7 +42,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="8dp" />
+        tools:layout_editor_absoluteX="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <include
+            android:id="@+id/day_one"
+            layout="@layout/forecast_layout"/>
+        <include
+            android:id="@+id/day_two"
+            layout="@layout/forecast_layout"/>
+        <include
+            android:id="@+id/day_three"
+            layout="@layout/forecast_layout"/>
+        <include
+            android:id="@+id/day_four"
+            layout="@layout/forecast_layout"/>
+        <include
+            android:id="@+id/day_five"
+            layout="@layout/forecast_layout"/>
+    </LinearLayout>
+
 
 
 </android.support.constraint.ConstraintLayout>
