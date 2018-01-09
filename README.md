@@ -1,6 +1,6 @@
 # PixelWeather (Work in progress)
 
-Native Android Weather Application using the OpenWeather API to display both the current weather and future forecast. Built with the intentions of implementing animated pixel art weather icons and background. 
+Native Android Weather Application using the OpenWeather API to display both the current weather and future fiveDayForecast. Built with the intentions of implementing animated pixel art weather icons and background.
 
 Language: Kotlin
 

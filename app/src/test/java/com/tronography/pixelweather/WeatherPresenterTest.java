@@ -46,7 +46,7 @@ public class WeatherPresenterTest {
 
     @Test
     public void whenShowWeatherReportIsComplete_shouldShowResults() {
-        when(weatherInteractor.getWeatherReport(anyString())).thenReturn(Single.just(weatherReport));
+        when(weatherInteractor.queryWeather(anyString())).thenReturn(Single.just(weatherReport));
 
         presenter.showWeatherReport(anyString());
 
@@ -55,7 +55,7 @@ public class WeatherPresenterTest {
 
     @Test
     public void whenErrorGettingWeatherReport_shouldShowError() {
-        when(weatherInteractor.getWeatherReport(anyString())).thenReturn(Single.error(new Error("Error Message")));
+        when(weatherInteractor.queryWeather(anyString())).thenReturn(Single.error(new Error("Error Message")));
 
         presenter.showWeatherReport(anyString());
 

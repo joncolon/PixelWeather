@@ -47,7 +47,27 @@ object DateFormatter {
                 .toString()
     }
 
-    private fun getNameOfDay(timeInMilliseconds: Long): String {
+    fun hourlyFormat(timeInMilli: Long): String {
+        calendar.timeInMillis = timeInMilli * 1000
+
+        return StringBuilder()
+                .append(getNameOfDay(timeInMilli))
+                .append("\n")
+                .append(month)
+                .append("/")
+                .append(dayOfMonth)
+                .append(" ")
+                .append(hourOfDayInTwelveHourClock)
+                .append(aMorPM)
+                .toString()
+    }
+
+    fun dayFormat(timeInMilli: Long): String {
+        calendar.timeInMillis = timeInMilli * 1000
+        return getNameOfDay(timeInMilli)
+    }
+
+    fun getNameOfDay(timeInMilliseconds: Long): String {
 
         if (isToday(timeInMilliseconds * 1000)) {
             return "TODAY"

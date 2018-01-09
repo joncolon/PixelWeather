@@ -7,16 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.bumptech.glide.Glide
 import com.tronography.pixelweather.R
 import com.tronography.pixelweather.model.CurrentWeatherModel
-import com.tronography.pixelweather.model.ForecastModel
-import com.tronography.pixelweather.utils.DateFormatter
+import com.tronography.pixelweather.model.FiveDayForecastModel
 import com.tronography.pixelweather.utils.IconUrlUtils
+import java.util.*
 
 
-internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherModel?, private val forecast: List<ForecastModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+internal class WeatherAdapter(
+        private val currentWeatherModel: CurrentWeatherModel?,
+        private val fiveDayForecast: ArrayList<FiveDayForecastModel>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder? {
         if (viewType == TYPE_CURRENT_WEATHER) {
@@ -30,17 +32,18 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
     }
 
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CurrentWeatherHolder) {
-            holder.bind(currentWeatherModel)
+            currentWeatherModel?.let { holder.bind(it) }
         } else if (holder is ForecastHolder) {
             val currentItem = getItem(position - 1)
             holder.bind(currentItem)
         }
     }
 
-    private fun getItem(position: Int): ForecastModel {
-        return forecast[position]
+    private fun getItem(position: Int): FiveDayForecastModel {
+        return fiveDayForecast[position]
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -53,15 +56,16 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
 
 
     override fun getItemCount(): Int {
-        return forecast.size
+        val spaceForCurrentWeatherViewHolder = 1
+        return fiveDayForecast.size + spaceForCurrentWeatherViewHolder
     }
 
     internal inner class ForecastHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var dateTv: TextView? = null
-        var tempMaxTv: TextView? = null
-        var tempMinTv: TextView? = null
-        var iconImage: ImageView? = null
+        var dateTv: TextView
+        var tempMaxTv: TextView
+        var tempMinTv: TextView
+        var iconImage: ImageView
 
         private val context: Context
 
@@ -73,41 +77,41 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
             iconImage = itemView.findViewById<ImageView>(R.id.icon_iv)
         }
 
-        fun bind(result: ForecastModel) {
+        fun bind(result: FiveDayForecastModel) {
             setDateTime(result)
             setTempMax(result)
             setTempMin(result)
             setIcon(result)
         }
 
-        private fun setIcon(result: ForecastModel) {
+        private fun setIcon(result: FiveDayForecastModel) {
             Glide.with(context)
                     .load(IconUrlUtils.getIconUrl(result.icon))
-                    .into(iconImage!!)
+                    .into(iconImage)
         }
 
-        private fun setTempMin(result: ForecastModel) {
-            tempMinTv!!.text = result.tempMin.toInt().toString()
+        private fun setTempMin(result: FiveDayForecastModel) {
+            tempMinTv.text = result.tempMin.toInt().toString()
         }
 
-        private fun setDateTime(result: ForecastModel) {
-            dateTv!!.text = DateFormatter.forecastDateFormatter(result.dateTime)
+        private fun setDateTime(result: FiveDayForecastModel) {
+            dateTv.text = result.dayOfWeek
         }
 
-        private fun setTempMax(result: ForecastModel) {
-            tempMaxTv!!.text = result.tempMax.toInt().toString()
+        private fun setTempMax(result: FiveDayForecastModel) {
+            tempMaxTv.text = result.tempMax.toInt().toString()
         }
     }
 
     internal inner class CurrentWeatherHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var currentTempTv: TextView? = null
-        var tempMinTv: TextView? = null
-        var tempMaxTv: TextView? = null
-        var cityTv: TextView? = null
-        var countryTv: TextView? = null
-        var descriptionTv: TextView? = null
-        var iconImage: ImageView? = null
+        var currentTempTv: TextView
+        var tempMinTv: TextView
+        var tempMaxTv: TextView
+        var cityTv: TextView
+        var countryTv: TextView
+        var descriptionTv: TextView
+        var iconImage: ImageView
 
         private val context: Context
 
@@ -122,49 +126,48 @@ internal class WeatherAdapter(private val currentWeatherModel: CurrentWeatherMod
             iconImage = itemView.findViewById<ImageView>(R.id.icon_iv)
         }
 
-        fun bind(result: CurrentWeatherModel?) {
-            setCurrentTemp(result)
-            setDescription(result)
-            setCity(result)
-            setCountry(result)
-            setTempMax(result)
-            setTempMin(result)
-            setIcon(result)
+        fun bind(currentWeather: CurrentWeatherModel) {
+            setCurrentTemp(currentWeather)
+            setDescription(currentWeather)
+            setCity(currentWeather)
+            setCountry(currentWeather)
+            setTempMax(currentWeather)
+            setTempMin(currentWeather)
+            setIcon(currentWeather)
         }
 
-        private fun setCurrentTemp(result: CurrentWeatherModel?) {
-            currentTempTv!!.text = result!!.currentTemp.toInt().toString()
+        private fun setCurrentTemp(currentWeather: CurrentWeatherModel) {
+            currentTempTv.text = currentWeather.currentTemp.toInt().toString()
         }
 
-        private fun setDescription(result: CurrentWeatherModel?) {
-            descriptionTv!!.text = result!!.description
+        private fun setDescription(currentWeather: CurrentWeatherModel) {
+            descriptionTv.text = currentWeather.description
         }
 
-        private fun setCity(result: CurrentWeatherModel?) {
-            cityTv!!.text = result!!.city
+        private fun setCity(currentWeather: CurrentWeatherModel) {
+            cityTv.text = currentWeather.city
         }
 
-        private fun setCountry(result: CurrentWeatherModel?) {
-            countryTv!!.text = result!!.country
+        private fun setCountry(currentWeather: CurrentWeatherModel) {
+            countryTv.text = currentWeather.country
         }
 
-        private fun setIcon(result: CurrentWeatherModel?) {
+        private fun setIcon(currentWeather: CurrentWeatherModel) {
             Glide.with(context)
-                    .load(IconUrlUtils.getIconUrl(result!!.icon))
-                    .into(iconImage!!)
+                    .load(IconUrlUtils.getIconUrl(currentWeather.icon))
+                    .into(iconImage)
         }
 
-        private fun setTempMin(result: CurrentWeatherModel?) {
-            tempMinTv!!.text = result!!.tempMin.toInt().toString()
+        private fun setTempMin(currentWeather: CurrentWeatherModel) {
+            tempMinTv.text = currentWeather.tempMin.toInt().toString()
         }
 
-        private fun setTempMax(result: CurrentWeatherModel?) {
-            tempMaxTv!!.text = result!!.tempMax.toInt().toString()
+        private fun setTempMax(currentWeather: CurrentWeatherModel) {
+            tempMaxTv.text = currentWeather.tempMax.toInt().toString()
         }
     }
 
     companion object {
-
         private val TYPE_CURRENT_WEATHER = 0
         private val TYPE_FORECAST = 1
     }

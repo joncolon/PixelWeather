@@ -19,7 +19,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    internal fun provideOkHttpeClient(): OkHttpClient {
+    internal fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder().build()
     }
 
