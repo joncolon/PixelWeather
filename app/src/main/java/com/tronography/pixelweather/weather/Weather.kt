@@ -12,5 +12,6 @@ interface Weather {
         fun showError(error: String?)
 
         fun showWeatherReport(weatherReport: WeatherReport)
+
     }
 }

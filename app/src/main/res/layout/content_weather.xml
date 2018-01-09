@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="192dp"/>
 
+
     <ProgressBar
         android:id="@+id/weather_progress_spinner"
         android:layout_width="wrap_content"
@@ -36,7 +37,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/forecast_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layoutAnimation="@anim/layout_animation_fall_down"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,30 +46,35 @@
         tools:layout_editor_absoluteX="8dp"/>
 
     <LinearLayout
+        android:id="@+id/five_day_forecast_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
         android:orientation="horizontal"
+        android:weightSum="1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
         <include
             android:id="@+id/day_one"
             layout="@layout/forecast_layout"/>
+
         <include
             android:id="@+id/day_two"
             layout="@layout/forecast_layout"/>
+
         <include
             android:id="@+id/day_three"
             layout="@layout/forecast_layout"/>
+
         <include
             android:id="@+id/day_four"
             layout="@layout/forecast_layout"/>
+
         <include
             android:id="@+id/day_five"
             layout="@layout/forecast_layout"/>
     </LinearLayout>
-
 
 
 </android.support.constraint.ConstraintLayout>

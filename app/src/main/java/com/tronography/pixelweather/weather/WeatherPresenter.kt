@@ -37,21 +37,32 @@ constructor(
     }
 
     fun showWeatherReport(city: String) {
-        weatherInteractor.getWeatherReport(city)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : DisposableSingleObserver<WeatherReport>() {
+        weatherInteractor.queryWeather(city)
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe(object : DisposableSingleObserver<WeatherReport>() {
 
-                    override fun onSuccess(value: WeatherReport) {
+                    override fun onSuccess(weatherReport: WeatherReport) {
                         view?.showLoading(false)
-                        view?.showWeatherReport(value)
+                        view?.showWeatherReport(weatherReport)
+
+
+                        println("deserializedWeather = ${sharedPrefsUtils.cachedWeatherReport?.let { WeatherReport.create(it) }}")
+                        println("weatherJson = ${weatherReport.serialize()}")
+                        sharedPrefsUtils.cachedWeatherReport = weatherReport.serialize()
+
                     }
 
                     override fun onError(e: Throwable) {
                         view?.showLoading(false)
                         view?.showError(e.message)
-                        Log.e("ERROR: ","e = " + e.stackTrace.toString())
+                        Log.e("ERROR: ", "e = " + e.stackTrace.toString())
                     }
                 })
+    }
+
+    fun showCachedWeatherReport() {
+        val cachedWeatherReport = sharedPrefsUtils.cachedWeatherReport?.let { WeatherReport.create(it) }
+        cachedWeatherReport?.let { view?.showWeatherReport(it) }
     }
 }
 

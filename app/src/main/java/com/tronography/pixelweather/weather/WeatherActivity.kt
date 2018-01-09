@@ -18,6 +18,7 @@ import com.tronography.pixelweather.PixelWeatherApplication
 import com.tronography.pixelweather.R
 import com.tronography.pixelweather.model.FiveDayForecastModel
 import com.tronography.pixelweather.model.WeatherReport
+import com.tronography.pixelweather.utils.AppUtils
 import com.tronography.pixelweather.utils.IconUrlUtils
 import com.tronography.pixelweather.utils.KeyboardUtils
 import java.util.*
@@ -47,6 +48,9 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
         presenter.setView(this)
 
 
+
+
+
         searchView = findViewById<SearchView>(R.id.search_view)
         spinner = findViewById<ProgressBar>(R.id.weather_progress_spinner)
         errorTv = findViewById<TextView>(R.id.weather_error_tv)
@@ -68,12 +72,16 @@ class WeatherActivity : AppCompatActivity(), Weather.View {
             }
         })
 
-        presenter.showWeatherFromLastQueriedCity()
+
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.showWeatherFromLastQueriedCity()
+        println("Has internet connection: ${AppUtils.isOnline(this)}")
+        when(AppUtils.isOnline(this)){
+            true -> presenter.showWeatherFromLastQueriedCity()
+            false -> presenter.showCachedWeatherReport()
+        }
         searchView.clearFocus()
     }
 

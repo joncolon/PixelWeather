@@ -5,14 +5,12 @@ package com.tronography.pixelweather.model
  */
 
 class FiveDayForecastModel(
-        var tempMax: Double,
-        var tempMin: Double,
+        var tempMax: Float,
+        var tempMin: Float,
         var icon: String,
         var dayOfWeek: String
 ) {
-    lateinit var hourlyForecast: MutableList<HourlyForecastModel>
-
-    lateinit var twelveHourForecast: MutableList<HourlyForecastModel>
+    var hourlyForecast: MutableList<HourlyForecastModel> = ArrayList()
 
     override fun toString(): String {
         return "FiveDayForecastModel(tempMax=$tempMax, tempMin=$tempMin, icon=$icon, dayOfWeek=$dayOfWeek, fiveDayForecast=$hourlyForecast)"

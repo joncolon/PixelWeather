@@ -4,8 +4,8 @@ import com.tronography.pixelweather.utils.DateFormatter
 
 
 class HourlyForecastModel internal constructor(
-        val tempMax: Double,
-        val tempMin: Double,
+        val tempMax: Float,
+        val tempMin: Float,
         val icon: String,
         val dateTime: Long
 ) {
