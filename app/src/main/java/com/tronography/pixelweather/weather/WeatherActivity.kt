@@ -1,5 +1,6 @@
 package com.tronography.pixelweather.weather
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.tronography.pixelweather.common.PresenterFactory
 import com.tronography.pixelweather.model.FiveDayForecastModel
 import com.tronography.pixelweather.model.WeatherReport
 import com.tronography.pixelweather.utils.AppUtils
+import com.tronography.pixelweather.utils.BackgroundSelector
 import com.tronography.pixelweather.utils.IconUrlUtils
 import com.tronography.pixelweather.utils.KeyboardUtils
 import java.util.*
@@ -54,7 +56,6 @@ class WeatherActivity : BasePresenterActivity<WeatherPresenter, Weather.View>(),
         spinner = findViewById(R.id.weather_progress_spinner)
         errorTv = findViewById(R.id.weather_error_tv)
         forecastRecyclerView = findViewById(R.id.forecast_list)
-        showNightSkyBackground()
 
         searchView.onActionViewExpanded()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -81,10 +82,6 @@ class WeatherActivity : BasePresenterActivity<WeatherPresenter, Weather.View>(),
 
     override fun getPresenterFactory(): PresenterFactory<WeatherPresenter> {
         return weatherPresenterFactory
-    }
-
-    override fun showNightSkyBackground() {
-        linearLayout.setBackgroundResource(R.drawable.gradient_sky_night)
     }
 
     override fun onStart() {
@@ -118,6 +115,9 @@ class WeatherActivity : BasePresenterActivity<WeatherPresenter, Weather.View>(),
     override fun showWeatherReport(weatherReport: WeatherReport) {
         Log.d("WeatherActivity", "showing Weather Report...")
 
+        val background: Drawable = BackgroundSelector.getSkyGradientBackgroundResourceId(this, weatherReport.currentWeather)
+
+        linearLayout.background = background
         Log.d("WeatherActivity", "instantiating weather adapter ...")
         val adapter = WeatherAdapter(weatherReport.currentWeather, forecast)
 
