@@ -13,7 +13,5 @@ interface Weather {
 
         fun showWeatherReport(weatherReport: WeatherReport)
 
-        fun showNightSkyBackground()
-
     }
 }
