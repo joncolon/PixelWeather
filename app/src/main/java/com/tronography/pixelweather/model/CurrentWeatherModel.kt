@@ -3,7 +3,7 @@ package com.tronography.pixelweather.model
 import com.tronography.pixelweather.utils.DateFormatter
 
 
-class CurrentWeatherModel internal constructor(
+class CurrentWeatherModel constructor(
         val city: String,
         val country: String,
         val description: String,

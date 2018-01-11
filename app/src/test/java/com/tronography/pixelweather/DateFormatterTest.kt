@@ -17,4 +17,20 @@ class DateFormatterTest {
 
         Assert.assertEquals(expectedResult, DateFormatter.forecastDateFormatter(dateToFormat))
     }
+
+    @Test
+    fun hourlyFormatTest() {
+        val dateToFormat: Long = 1508095680
+        val expectedResult = "3pm"
+
+        Assert.assertEquals(expectedResult, DateFormatter.hourlyFormat(dateToFormat))
+    }
+
+    @Test
+    fun dayFormatTest() {
+        val dateToFormat: Long = 1508095680
+        val expectedResult = "SUN"
+
+        Assert.assertEquals(expectedResult, DateFormatter.dayFormat(dateToFormat))
+    }
 }
