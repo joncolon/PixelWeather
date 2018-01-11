@@ -51,12 +51,6 @@ object DateFormatter {
         calendar.timeInMillis = timeInMilli * 1000
 
         return StringBuilder()
-                .append(getNameOfDay(timeInMilli))
-                .append("\n")
-                .append(month)
-                .append("/")
-                .append(dayOfMonth)
-                .append(" ")
                 .append(hourOfDayInTwelveHourClock)
                 .append(aMorPM)
                 .toString()
